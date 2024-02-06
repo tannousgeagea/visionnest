@@ -22,7 +22,8 @@ def put_text(
         draw_rectangle(image, p1, p2, background_color, filled=True)
 
     return cv2.putText(
-        image,label, 
+        image,
+        label, 
         (p1[0], p1[1] - 2 if outside else p1[1] + h + 2),
         0,
         line_width / 3,

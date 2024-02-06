@@ -54,8 +54,8 @@ class Detections:
     confidence: Optional[np.ndarray]=None
     class_id: Optional[np.ndarray]=None
     tracker_id: Optional[np.ndarray]=None
-    object_length: Optional[ndarray]=None
-    object_area: Optional[ndarray]=None
+    object_length: Optional[np.ndarray]=None
+    object_area: Optional[np.ndarray]=None
 
     def __len__(self):
         """
