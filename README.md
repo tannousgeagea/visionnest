@@ -4,7 +4,7 @@
     <a align="center" href="" target="_blank">
       <img
         width="100%"
-        src="https://media.roboflow.com/open-source/supervision/rf-supervision-banner.png?updatedAt=1678995927529"
+        src="https://github.com/tannousgeagea/visionnest/blob/develop/docs/assets/visionnest-logo.png"
       >
     </a>
   </p>
