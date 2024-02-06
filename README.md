@@ -3,7 +3,7 @@
   <p>
     <a align="center" href="" target="_blank">
       <img
-        width="100%"
+        width="50%"
         src="https://github.com/tannousgeagea/visionnest/blob/develop/docs/assets/visionnest-logo.png"
       >
     </a>
