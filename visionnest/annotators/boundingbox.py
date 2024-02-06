@@ -16,15 +16,19 @@ License: MIT
 import cv2
 import cv2
 import sys
+import logging
 import numpy as np
+from typing import Any
 from typing import List
 from typing import Tuple
-from typing import Optional
 from typing import Union
-from visionnest.detection.core import Detections
-from visionnest.draw.rectangle import draw_rectangle
+from typing import Optional
+
 from visionnest.draw.label import put_text
 from visionnest.image.colors import Colors
+from visionnest.detection.core import Detections
+from visionnest.draw.rectangle import draw_rectangle
+from visionnest.image.color_palette import ColorPalette
 
 class BoxAnnotator:
     """
@@ -103,5 +107,54 @@ class BoxAnnotator:
     def annotate(
         self,
         detections: Detections,
-        color:
-    )
+        labels:Optional[List]=None,
+        colors: Union[np.ndarray, Tuple]=None,
+        txt_color: Union[Tuple, str, Colors]=None,
+        ):
+        """
+        Annotates the image with bounding boxes based on the provided detections.
+
+        This method draws bounding boxes around detected objects in the image. It optionally accepts custom labels and colors for the boxes. If the number of provided colors is less than the number of detections, a warning is logged. Each detection is represented by a bounding box, which is drawn using the `box_label` method.
+
+        Parameters:
+            detections (Detections): An object containing detection data, including bounding box coordinates and class IDs.
+            labels (Optional[List], optional): A list of labels corresponding to each detection. Defaults to None, in which case no labels are used.
+            colors (Union[np.ndarray, Tuple], optional): An array or a tuple of colors to be used for each detection's bounding box. Defaults to None, in which case a default color palette is used.
+            txt_color (Union[Tuple, str, Colors], optional): The color to be used for the text of the labels. Can be specified as a tuple, a string, or a `Colors` object. Defaults to None.
+
+        Raises:
+            Exception: Logs an error if an unexpected error occurs during the annotation process.
+
+        Example:
+            >>> annotator = BoxAnnotator(image)
+            >>> detections = Detections(...)  # Detections object with bounding box and class information
+            >>> annotator.annotate(detections, labels=["label1", "label2"], colors=[(255,0,0), (0,255,0)])
+            # This will annotate the image with the specified detections, labels, and colors.
+        """
+
+        color_palette = ColorPalette()
+        if not colors is None:
+            if len(colors) < len(detections):
+                logging.warning(
+                    f"⚠️  colors provided by users of length {len(colors)} "
+                    f"is out of bounds for detections of length {len(detections)}"
+                )
+        
+            color_palette.add_color(colors)
+        
+        try:
+            for i, xyxy in enumerate(detections.xyxy):
+                xyxy = xyxy.astype(int)
+                color_idx = detections.class_id[i] if not detections.class_id is None else i 
+                self.box_label(
+                    xyxy=xyxy,
+                    label=labels[i] if not labels is None else "",
+                    color=color_palette.get_color_by_index(color_idx),
+                    txt_color=txt_color,
+                )
+
+        except Exception as err:
+            logging.error("Unexpected Error in annotate: %s" % err)
+
+
+

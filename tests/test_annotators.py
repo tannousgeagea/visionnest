@@ -4,6 +4,8 @@ from visionnest.image.colors import Colors
 from visionnest.draw.rectangle import draw_rectangle
 from visionnest.draw.label import put_text
 from visionnest.annotators.boundingbox import BoxAnnotator
+from visionnest.detection.core import Detections
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,10 +14,6 @@ import matplotlib.pyplot as plt
 def test_box_label():
      # Create a blank black image
     img = np.zeros((300, 300, 3), dtype="uint8")
-
-    # Coordinates of the rectangle's top-left and bottom-right corners
-    top_left_corner = (10, 10)
-    bottom_right_corner = (250, 250)
 
     # Color of the rectangle (Blue, Green, Red)
     rect_color = Colors(0, 255, 0)  # Green
@@ -36,5 +34,35 @@ def test_box_label():
     plt.imshow(annotator.im)
     plt.show()
 
+
+def test_annotate():
+    img = np.zeros((640, 640, 3), dtype="uint8")
+
+    boxes = np.array(
+        [
+            [10, 10, 50, 50],
+            [60, 60, 100, 100],
+            [150, 150, 200, 200]
+        ]
+    ) 
+
+
+    labels = ['object'] * len(boxes)
+
+    colors = [Colors(0, 255, 0)] * (len(boxes) - 1)
+    detections = Detections(xyxy=boxes, class_id=np.array([0, 0, 1]))
+    annotator = BoxAnnotator(im=img, line_width=2)
+    annotator.annotate(
+        detections=detections,
+        labels=labels,
+        colors=colors,
+        txt_color=Colors(0, 0, 0)
+    )
+
+    plt.imshow(annotator.im)
+    plt.show()
+
+
+
 if __name__ == "__main__":
-    test_box_label()
+    test_annotate()
