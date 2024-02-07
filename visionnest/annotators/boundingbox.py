@@ -140,8 +140,15 @@ class BoxAnnotator:
                     f"is out of bounds for detections of length {len(detections)}"
                 )
         
-            color_palette.add_color(colors)
+            color_palette.override_color(colors)
         
+        if not labels is None:
+            if len(labels) != len(detections):
+                logging.warning(
+                    f"⚠️  labels provided by users of length {len(labels)} "
+                    f"is out of bounds for detections of length {len(detections)}"
+                ) 
+                labels = None
         try:
             for i, xyxy in enumerate(detections.xyxy):
                 xyxy = xyxy.astype(int)

@@ -1,4 +1,5 @@
 import random
+import logging
 from typing import Union
 from typing import List, Tuple
 from .colors import Colors
@@ -52,7 +53,7 @@ class ColorPalette:
         ]
         self.add_palette(basic_palette)
 
-    def add_color(self, color_code: Union[tuple, list]):
+    def add_color(self, color_code: Union[tuple, list, Colors]):
         """
         Adds a new color to the palette.
         """
@@ -61,6 +62,10 @@ class ColorPalette:
             self.colors.append(Colors(r, g, b))
         elif isinstance(color_code, str):
             self.colors.append(Colors.hex_to_rgb(color_code))
+        elif isinstance(color_code, Colors):
+            self.colors.append(color_code)
+        else:
+            logging.warning("⚠️  Unsupported color code: {}".format(color_code))
 
     def add_palette(self, palette: list):
         """
@@ -72,6 +77,27 @@ class ColorPalette:
         """
         for rgb in palette:
             self.add_color(rgb)
+
+    def override_color(self, colors: List):
+        """
+        override a set of named colors to the palette.
+        
+        Parameters:
+            palette_name (str): A name for the palette for reference.
+        """
+        lookup_colors = []
+        for color_code in colors:
+            if isinstance(color_code, Tuple):
+                r, g, b =  color_code
+                lookup_colors.append(Colors(r, g, b))
+            elif isinstance(color_code, str):
+                lookup_colors.append(Colors.hex_to_rgb(color_code))
+            elif isinstance(color_code, Colors):
+                lookup_colors.append(color_code)
+            else:
+                logging.warning("⚠️  Unsupported color code: {}".format(color_code))
+        if len(lookup_colors):
+            self.colors = lookup_colors + self.colors
 
     def get_color_by_index(self, index: int):
         """

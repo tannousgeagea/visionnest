@@ -47,9 +47,8 @@ def test_annotate():
     ) 
 
 
-    labels = ['object'] * len(boxes)
-
-    colors = [Colors(0, 255, 0)] * (len(boxes) - 1)
+    labels = ['object'] * (len(boxes) - 1)
+    colors = [Colors(128, 255, 0)] * (len(boxes))
     detections = Detections(xyxy=boxes, class_id=np.array([0, 0, 1]))
     annotator = BoxAnnotator(im=img, line_width=2)
     annotator.annotate(
